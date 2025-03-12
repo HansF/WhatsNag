@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+  <meta charset="UTF-8">
+  <title>WhatsApp Link Generator</title>
+</head>
+<body>
+  <h2>WhatsApp Link Generator</h2>
+  <p>Geef hieronder een telefoonnummer in (zonder of met landcode). We voegen indien nodig automatisch "32" toe (voor België).</p>
+  
+  <label for="phoneInput">Telefoonnummer:</label>
+  <input type="text" id="phoneInput" placeholder="Bijv. 0479 12 34 56">
+  <button onclick="createWhatsAppLinks()">Genereer Links</button>
+
+  <div id="result"></div>
+
+  <script>
+    function createWhatsAppLinks() {
+      let phone = document.getElementById('phoneInput').value.trim();
+      // Verwijder alle niet-numerieke tekens
+      let cleanedPhone = phone.replace(/\D/g, '');
+
+      // Verwijder een vooraanstaande 0
+      if (cleanedPhone.startsWith("0")) {
+        cleanedPhone = cleanedPhone.substring(1);
+      }
+
+      // Als het niet begint met 32, voeg 32 toe
+      if (!cleanedPhone.startsWith("32")) {
+        cleanedPhone = "32" + cleanedPhone;
+      }
+
+      // Definieer de berichten
+      let msgNl = "Je hebt je opgegeven als vrijwilliger en een ticket besteld. " +
+      "Je hebt een mail ontvangen die je bevestigt dat je kunt betalen, maar je hebt nog niet betaald. " +
+      "Als je niet betaalt, verlies je je plek. " +
+      "Heb je geen mail ontvangen? Ga dan naar https://tickets.safeword.be/, " +
+      "zoek het evenement dat je wilt ondersteunen en klik onderaan de pagina op " +
+      "'Bestellink opnieuw versturen'. " +
+      "Check ook je spamfolder om de status van je bestelling te zien en de betaallink te vinden.";
+
+      let msgFr = "Vous vous êtes porté(e) volontaire et vous avez commandé un billet. " +
+      "Vous avez reçu un e-mail confirmant votre commande et vous invitant à payer, " +
+      "mais vous n'avez pas encore réglé. " +
+      "Si vous ne payez pas, vous perdrez votre place. " +
+      "Si vous n'avez pas reçu d'e-mail, rendez-vous sur https://tickets.safeword.be/, " +
+      "sélectionnez l'événement que vous souhaitez soutenir et cliquez tout en bas sur " +
+      "'Renvoyer les liens de la commande'. " +
+      "Vérifiez également votre dossier spam pour obtenir votre lien de paiement et voir " +
+      "le statut de votre commande.";
+
+      let msgEn = "You have signed up as a volunteer and ordered a ticket. " +
+      "You have received an email confirming your order and asking you to pay, " +
+      "but you haven't done so yet. " +
+      "If you don't pay, you will lose your spot. " +
+      "If you haven't received an email, go to https://tickets.safeword.be/, " +
+      "find the event you want to support and click at the bottom of the page on " +
+      "'Resend order link'. " +
+      "Check your email, including your spam folder, to see the status of your order and find the payment link.";
+
+      // Bouw de WhatsApp-links met encodeURIComponent
+      let linkNl = "https://wa.me/" + cleanedPhone + "?text=" + encodeURIComponent(msgNl);
+      let linkFr = "https://wa.me/" + cleanedPhone + "?text=" + encodeURIComponent(msgFr);
+      let linkEn = "https://wa.me/" + cleanedPhone + "?text=" + encodeURIComponent(msgEn);
+
+      // Toon de resultaten in HTML
+      document.getElementById('result').innerHTML = `
+        <p>Nederlands: 
+          <a href="${linkNl}" target="_blank">${linkNl}</a>
+        </p>
+        <p>Frans: 
+          <a href="${linkFr}" target="_blank">${linkFr}</a>
+        </p>
+        <p>Engels: 
+          <a href="${linkEn}" target="_blank">${linkEn}</a>
+        </p>
+      `;
+    }
+  </script>
+</body>
+</html>
